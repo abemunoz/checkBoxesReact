@@ -4,7 +4,7 @@ export default class Checkboxes extends React.Component {
   constructor(props) {
     super(props);
     const checkBoxState = {};
-    this.checkboxes = ["bike", "car", "boat", "plane", "selectUnselect"];
+    this.checkboxes = ["bike", "car", "boat", "plane", "ALL"];
     this.checkboxes.forEach(checkbox => {
       checkBoxState[checkbox] = false;
     });
@@ -14,60 +14,43 @@ export default class Checkboxes extends React.Component {
   handleInputChange = event => {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name + "";
-    console.log(name);
-    console.log(value);
-    if (name === "selectUnselect") {
-      this.setState(prevState => ({
-        bike: !prevState.selectUnselect,
-        car: !prevState.selectUnselect,
-        boat: !prevState.selectUnselect,
-        plane: !prevState.selectUnselect,
+    let name = target.name;
+    if (name === "ALL") {
+      this.checkboxes.forEach(checkbox => {
+        this.setState(prevState => ({
+          [checkbox]: !prevState["ALL"]
+        }));
+      });
+      this.setState({
         count: 4
-      }));
+      });
     } else {
       let newCount = value ? this.state.count + 1 : this.state.count - 1;
-      console.log(newCount);
-      if (newCount === 0) {
+      if (newCount === this.checkboxes.length - 1) {
         this.setState({
-          name: value,
+          [name]: value,
           count: newCount,
-          selectUnselect: false
-        });
-      } else if (newCount === 4) {
-        this.setState({
-          name: value,
-          count: newCount,
-          selectUnselect: true
+          ALL: true
         });
       } else {
-        let tempObj = {
-          name: value,
-          count: newCount,
-          selectUnselect: false
-        };
-        console.log(tempObj);
         this.setState({
-          name: value,
+          [name]: value,
           count: newCount,
-          selectUnselect: false
+          ALL: false
         });
       }
     }
-    setTimeout(() => {
-      // console.log(this.state);
-    }, 1000);
   };
 
   render() {
     return (
       <form>
         {this.checkboxes.map((checkbox, index) => (
-          <div>
+          <div key={index}>
             <Checkbox
-              key={index}
+              key={checkbox}
               name={checkbox}
-              checked={this.state.checkbox}
+              checked={this.state[checkbox]}
               handleInputChange={this.handleInputChange}
             />
             <br />
