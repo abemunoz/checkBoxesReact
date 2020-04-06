@@ -1,2 +1,0 @@
-# checkBoxesReact
-Created with CodeSandbox
